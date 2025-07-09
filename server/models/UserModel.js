@@ -11,12 +11,10 @@ const userSchema = new mongoose.Schema({
     },
     firstName: {
         type: String,
-        required: [true, "Full Name is required"],
         trim: true
     },
     lastName: {
         type: String,
-        required: [true, "Full Name is required"],
         trim: true
     },
     username: {
@@ -33,6 +31,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    imagePublicId: {
+        type: String,
+        required: false
+    },
     profileSetup: {
         type: Boolean,
         default: false
@@ -40,8 +42,13 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function (next) {
+
+    if(!this.isModified("password")){
+        return next();
+    }
+
     const salt = await bcrypt.genSalt();
-    this.password = await hash(this.password,salt);
+    this.password = await bcrypt.hash(this.password,salt);
     next();
 })
 

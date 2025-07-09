@@ -1,13 +1,15 @@
 const express = require("express");
 const http = require("http");
 const debug = require("debug")("development:app");
+
 const dotenv = require("dotenv");
+dotenv.config();
+
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/AuthRoutes");
 const mongoose = require("mongoose");
 
-dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -36,3 +38,4 @@ server.listen(port,(err)=>{
 mongoose.connect(databaseUrl)
 .then(()=>{debug("Database connected successfully!")})
 .catch((err)=>{debug("error in connecting the db: ",err.message)});
+
